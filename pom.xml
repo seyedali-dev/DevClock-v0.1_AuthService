@@ -125,11 +125,15 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version> <!-- Ensure you have the latest version -->
 				<configuration>
-					<release>22</release>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<release>${java.version}</release>
 					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<finalName>Authentication-Service</finalName>
 	</build>
 
 </project>
