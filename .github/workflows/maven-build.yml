@@ -24,3 +24,6 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn clean install
+        env:
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
