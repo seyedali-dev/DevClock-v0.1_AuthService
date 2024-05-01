@@ -131,6 +131,15 @@
 					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
+
+			<!-- for ci: Preview features are not enabled for ...Test.java Try running with '-enable-preview' ERROR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>--enable-preview</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 
 		<finalName>Authentication-Service</finalName>
