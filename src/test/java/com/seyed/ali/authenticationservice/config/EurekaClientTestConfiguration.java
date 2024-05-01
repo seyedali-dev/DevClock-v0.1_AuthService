@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
  * It returns a static list of service instances, which your application can use as if it was the actual list from Eureka.
  */
 @TestConfiguration
-public class EurekaClientConfiguration {
+public class EurekaClientTestConfiguration {
 
     /**
      * Returns a ServiceInstanceListSupplier that provides a list of service instances for a service ID.

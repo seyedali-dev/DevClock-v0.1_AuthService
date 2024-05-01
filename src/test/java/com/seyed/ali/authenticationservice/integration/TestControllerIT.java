@@ -1,75 +1,50 @@
 package com.seyed.ali.authenticationservice.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpHeaders;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.seyed.ali.authenticationservice.config.EurekaClientTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Map;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableConfigurationProperties /* to use application-test.yml-test file */
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
+@AutoConfigureMockMvc /* calling the api itself */
+@ContextConfiguration(classes = {EurekaClientTestConfiguration.class}) /* to call the configuration in the test (for service-registry configs) */
 public class TestControllerIT {
 
     //<editor-fold desc="fields">
-    private @Autowired WebTestClient webTestClient;
-    private @Autowired WebClient webClient;
-    private @Autowired ObjectMapper objectMapper;
-    private @Value("${springdoc.swagger-ui.oauth.client-id}") String clientId;
-    private @Value("${springdoc.swagger-ui.oauth.client-secret}") String clientSecret;
-    private String token;
+    private @Autowired MockMvc mockMvc;
     //</editor-fold>
 
-    @BeforeEach
-    void setUp() {
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("grant_type", "password");
-        formData.add("client_id", this.clientId);
-        formData.add("client_secret", this.clientSecret);
-        formData.add("username", "default");
-        formData.add("password", "1");
-
-        String jwtToken = this.webClient
-                .post()
-                .uri("http://localhost:8080/realms/DevVault-v2.0/protocol/openid-connect/token")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(formData))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        try {
-            Map accessToken = this.objectMapper.readValue(jwtToken, Map.class);
-            this.token = STR."Bearer \{accessToken.get("access_token").toString()}";
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
-    public void helloTest() {
-        WebTestClient.ResponseSpec exchange = this.webTestClient
-                .get()
-                .uri("")
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .exchange();
+    public void helloTest() throws Exception {
+        ResultActions resultActions = this.mockMvc.perform(
+                MockMvcRequestBuilders.get("")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("board_manager")))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
 
-        exchange.expectStatus().isOk()
-                .expectBody(String.class)
-                .isEqualTo("Hello World");
+        resultActions.andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$", is("Hello World")));
     }
 
 }
