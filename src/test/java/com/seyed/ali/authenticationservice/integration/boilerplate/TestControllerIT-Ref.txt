@@ -1,28 +1,28 @@
-//package com.seyed.ali.authenticationservice.integration.boilerplate;
-//
-//import com.fasterxml.jackson.databind.DeserializationFeature;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.fasterxml.jackson.databind.SerializationFeature;
-//import com.seyed.ali.authenticationservice.config.EurekaClientTestConfiguration;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.context.properties.EnableConfigurationProperties;
-//import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.http.MediaType;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.ResultActions;
-//import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-//import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-//
-//import static org.hamcrest.Matchers.is;
-//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+package com.seyed.ali.authenticationservice.integration.boilerplate;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.seyed.ali.authenticationservice.config.EurekaClientTestConfiguration;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /*
  * This class is for reference where I was getting into error while trying to build the project
@@ -31,8 +31,6 @@
  * Because, the integration test was failing in GitHub action tab, since there was no keycloak server
  * present.
  */
-
-/*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableConfigurationProperties *//* to use application-test.yml-test file *//*
 @ActiveProfiles("test")
@@ -107,4 +105,3 @@ public class TestControllerIT {
     }
 
 }
-*/
