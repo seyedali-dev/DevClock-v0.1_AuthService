@@ -1,8 +1,11 @@
 package com.seyed.ali.authenticationservice.keycloak.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.seyed.ali.authenticationservice.keycloak.model.dto.UserDTO;
 import com.seyed.ali.authenticationservice.keycloak.util.KeycloakSecurityUtil;
+import com.seyed.ali.authenticationservice.keycloak.util.converter.UserDTOToUserRepresentationConverter;
 import com.seyed.ali.authenticationservice.keycloak.util.converter.UserRepresentationToUserDtoConverter;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
@@ -29,13 +35,25 @@ class KeycloakAdminUserServiceImplTest {
     //<editor-fold desc="fields">
     private @InjectMocks KeycloakAdminUserServiceImpl keycloakAdminUserService;
     private @Mock UserRepresentationToUserDtoConverter userRepresentationToUserDtoConverter;
+    private @Mock UserDTOToUserRepresentationConverter userDTOToUserRepresentationConverter;
     private @Mock Keycloak keycloak;
     private @Mock KeycloakSecurityUtil keycloakSecurityUtil;
     private @Mock UsersResource usersResource;
+    private @Mock UserDTO userDTO;
     //</editor-fold>
 
+    //<editor-fold desc="setup">
     @BeforeEach
     void setUp() {
+        this.userDTO = new UserDTO(
+                "1",
+                "John",
+                "Doe",
+                "some@email.com",
+                "johndoe",
+                null
+        );
+
         // Initialize the keycloak mock
         this.keycloak = mock(Keycloak.class);
         RealmResource realmResource = mock(RealmResource.class);
@@ -47,6 +65,7 @@ class KeycloakAdminUserServiceImplTest {
         when(realmResource.users())
                 .thenReturn(this.usersResource);
     }
+    //</editor-fold>
 
     @Test
     @SuppressWarnings("preview")
@@ -91,15 +110,6 @@ class KeycloakAdminUserServiceImplTest {
                 .thenReturn(userResource);
         when(userResource.toRepresentation())
                 .thenReturn(userRepresentation);
-
-        UserDTO userDTO = new UserDTO(
-                "1",
-                "John",
-                "Doe",
-                "some@email.com",
-                "johndoe",
-                null
-        );
         when(this.userRepresentationToUserDtoConverter.convert(userRepresentation))
                 .thenReturn(userDTO);
 
@@ -109,7 +119,43 @@ class KeycloakAdminUserServiceImplTest {
         // then
         assertThat(foundUserDTO)
                 .isNotNull()
-                .isEqualTo(userDTO);
+                .isEqualTo(this.userDTO);
+    }
+
+    @Test
+    @SuppressWarnings("preview")
+    public void testCreateUserRepresentation() throws JsonProcessingException {
+        // given
+        // mocking `UserDTOToUserRepresentationConverter#convert(UserDTO)`
+        UserRepresentation userRepresentation = mock(UserRepresentation.class);
+        when(this.userDTOToUserRepresentationConverter.convert(isA(UserDTO.class)))
+                .thenReturn(userRepresentation);
+
+        // mocking `UsersResource#create(UserRepresentation)`
+        Response response = mock(Response.class);
+        when(this.usersResource.create(userRepresentation))
+                .thenReturn(response);
+
+        // mocking `Response.Status.CREATED#getStatusCode()`
+        String userId = "some_id";
+        when(response.getStatus())
+                .thenReturn(Response.Status.CREATED.getStatusCode());
+
+        // mocking `Response#getLocation()`
+        when(response.getLocation())
+                .thenReturn(URI.create(STR."/some_path/\{userId}"));
+
+        Map<String, String> expectedResponse = new HashMap<>();
+        expectedResponse.put("message", "User created!");
+        expectedResponse.put("userId", userId);
+
+        // when
+        Map<String, String> actualResponse = this.keycloakAdminUserService.createUserRepresentation(this.userDTO);
+
+        // then
+        assertThat(actualResponse)
+                .as("Must be same")
+                .isEqualTo(expectedResponse);
     }
 
 }

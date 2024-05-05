@@ -5,12 +5,13 @@ import com.seyed.ali.authenticationservice.keycloak.service.interfaces.KeycloakA
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +39,12 @@ public class UserResource {
     @GetMapping("/{id}")
     public UserDTO getUserDTO(@PathVariable String id) {
         return this.keycloakAdminUserService.getSingleUserDTO(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public ResponseEntity<Map<String, String>> createUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(this.keycloakAdminUserService.createUserRepresentation(userDTO));
     }
 
 }
