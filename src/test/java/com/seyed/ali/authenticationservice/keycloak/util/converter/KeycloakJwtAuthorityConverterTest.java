@@ -1,6 +1,5 @@
 package com.seyed.ali.authenticationservice.keycloak.util.converter;
 
-import com.seyed.ali.authenticationservice.keycloak.converter.KeycloakJwtAuthorityConverter;
 import com.seyed.ali.authenticationservice.keycloak.util.KeycloakSecurityUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

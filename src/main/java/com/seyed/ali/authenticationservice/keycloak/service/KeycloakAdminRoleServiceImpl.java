@@ -21,7 +21,7 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
     @Autowired
     public KeycloakAdminRoleServiceImpl(KeycloakSecurityUtil keycloakSecurityUtil) {
         this.keycloakSecurityUtil = keycloakSecurityUtil;
-        this.keycloak = this.keycloakSecurityUtil.getKeycloakInstance();
+        this.keycloak = this.keycloakSecurityUtil.createOrGetKeycloakInstance();
     }
 
 
