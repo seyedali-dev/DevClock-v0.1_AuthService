@@ -1,4 +1,4 @@
-package com.seyed.ali.authenticationservice.keycloak.util.converter;
+package com.seyed.ali.authenticationservice.keycloak.converter;
 
 import com.seyed.ali.authenticationservice.keycloak.util.KeycloakSecurityUtil;
 import lombok.RequiredArgsConstructor;

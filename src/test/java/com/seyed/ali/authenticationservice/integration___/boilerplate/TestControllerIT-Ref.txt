@@ -1,4 +1,4 @@
-package com.seyed.ali.authenticationservice.integration.boilerplate;
+package com.seyed.ali.authenticationservice.integration___.boilerplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
