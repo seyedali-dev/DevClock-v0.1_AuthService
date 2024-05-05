@@ -1,7 +1,12 @@
 spring:
   application:
     name: Authentication-Service
+  #enable .env.properties file
+  config:
+    import: classpath:.env.properties
 
+--- # DB
+spring:
   datasource:
     url: jdbc:h2:mem:order
     username: sa
@@ -20,6 +25,16 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://${KEYCLOAK_SERVER_HOST:localhost}:8080/realms/DevVault-v2.0
+# Custom var
+keycloak:
+  user:
+    realm: DevVault-v2.0
+    server-url: http://localhost:8080 # keycloak server's port
+    client-id: admin-cli # this is mandatory
+    grant-type: password
+    username: ${KEYCLOAK_REALM_ADMIN_USER_USERNAME} # the newly created user with the given roles
+    password: ${KEYCLOAK_REALM_ADMIN_USER_PASSWORD}
+    default-role: user
 
 --- # Swagger
 springdoc:

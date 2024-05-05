@@ -1,4 +1,4 @@
-package com.seyed.ali.authenticationservice.integration;
+package com.seyed.ali.authenticationservice.integration___;
 
 import com.seyed.ali.authenticationservice.config.EurekaClientTestConfiguration;
 import org.hamcrest.CoreMatchers;

@@ -2,6 +2,9 @@ package com.seyed.ali.authenticationservice.keycloak.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -13,11 +16,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class for security-related information from Keycloak JWT tokens.
+ * This is a utility class for managing security-related information from Keycloak JWT tokens.
+ * <br><br>
+ * <ul>
+ *     <li>One of its main responsibilities is to instantiate a {@link Keycloak} object which can be used for various Keycloak operations.</li>
+ *     <li>It also provides methods to extract user roles from the JWT token and convert them into granted authorities for Spring Security.</li>
+ * </ul>
  */
 @Component
 @RequiredArgsConstructor
 public class KeycloakSecurityUtil {
+
+    // Keycloak instance
+    private Keycloak keycloak;
+
+    // Keycloak configuration properties
+    private @Value("${keycloak.user.realm}") String realm;
+    private @Value("${keycloak.user.server-url}") String serverUrl;
+    private @Value("${keycloak.user.grant-type}") String grantType;
+    private @Value("${keycloak.user.client-id}") String clientId;
+    private @Value("${keycloak.user.username}") String username;
+    private @Value("${keycloak.user.password}") String password;
 
     /**
      * Object mapper instance for converting JSON data to Java objects.
@@ -25,15 +44,36 @@ public class KeycloakSecurityUtil {
     private final ObjectMapper objectMapper;
 
     /**
-     * Extracts a collection of granted authorities from a Keycloak JWT token.
+     * This method returns an instance of {@link Keycloak}.
      * <p>
-     * In Keycloak JWT token, the roles are present in the {@code realm_access} field. We're extracting the roles,
-     * and mapping it to a {@link SimpleGrantedAuthority}.
+     * If the instance is null, it creates a new one using the provided Keycloak configuration properties.
+     *
+     * @return an instance of Keycloak
+     */
+    public Keycloak getKeycloakInstance() {
+        if (keycloak == null) {
+            this.keycloak = KeycloakBuilder.builder()
+                    .realm(this.realm)
+                    .serverUrl(this.serverUrl)
+                    .grantType(this.grantType)
+                    .clientId(this.clientId)
+                    .username(this.username)
+                    .password(this.password)
+                    .build();
+        }
+
+        return this.keycloak;
+    }
+
+    /**
+     * This method extracts a collection of granted authorities from a Keycloak JWT token.
      * <p>
-     * Look into the tests!
+     * It retrieves the roles from the {@code realm_access} field in the JWT token and maps them to {@link SimpleGrantedAuthority} objects.
+     * If the 'realm_access' claim is null, it returns an empty list of authorities.
      *
      * @param jwt the Keycloak JWT token
      * @return a collection of granted authorities
+     * @see . the test of this method <pre>KeycloakSecurityUtilTest#testExtractAuthorities()</pre>
      */
     public Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
         // Get the "realm_access" claim from the JWT token
