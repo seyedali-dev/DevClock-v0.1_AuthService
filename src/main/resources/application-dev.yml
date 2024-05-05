@@ -8,7 +8,7 @@ spring:
     name: Authentication-Service
   #enable .env.properties file
   config:
-    import: classpath:.env.properties
+    import: optional:classpath:.env.properties
 
 
 --- # DB
