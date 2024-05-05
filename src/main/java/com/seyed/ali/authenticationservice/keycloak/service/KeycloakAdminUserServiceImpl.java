@@ -7,6 +7,7 @@ import com.seyed.ali.authenticationservice.keycloak.util.converter.UserRepresent
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
     private final UserRepresentationToUserDtoConverter userRepresentationToUserDtoConverter;
     private final KeycloakSecurityUtil keycloakSecurityUtil;
     private Keycloak keycloak;
+    private UsersResource usersResource;
 
     public KeycloakAdminUserServiceImpl(
             UserRepresentationToUserDtoConverter userRepresentationToUserDtoConverter,
@@ -56,7 +58,8 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
 
     @Override
     public List<UserDTO> getUserDTOList() {
-        List<UserRepresentation> userRepresentationList = this.lazyLoadKeycloakInstance().realm(this.realm)
+        List<UserRepresentation> userRepresentationList = this.lazyLoadKeycloakInstance()
+                .realm(this.realm)
                 .users()
                 .list();
         List<UserDTO> userDTOList = new ArrayList<>();
@@ -64,6 +67,16 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
             userRepresentationList.forEach(userRepresentation -> userDTOList.add(this.userRepresentationToUserDtoConverter.convert(userRepresentation)));
         }
         return userDTOList;
+    }
+
+    @Override
+    public UserDTO getSingleUserDTO(String id) {
+        UserRepresentation foundUserRepresentation = this.lazyLoadKeycloakInstance()
+                .realm(this.realm)
+                .users()
+                .get(id)
+                .toRepresentation();
+        return this.userRepresentationToUserDtoConverter.convert(foundUserRepresentation);
     }
 
 }

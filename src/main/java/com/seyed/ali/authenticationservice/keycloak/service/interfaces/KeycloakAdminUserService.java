@@ -8,4 +8,6 @@ public interface KeycloakAdminUserService {
 
     List<UserDTO> getUserDTOList();
 
+    UserDTO getSingleUserDTO(String id);
+
 }
