@@ -22,6 +22,13 @@ jobs:
           distribution: 'oracle'
           cache: maven
 
+      - name: Create `.env.properties` file
+        run: |
+          echo "KEYCLOAK_REALM_ADMIN_USER_USERNAME=${{ secrets.KEYCLOAK_REALM_ADMIN_USER_USERNAME }}" >> .env.properties
+          echo "KEYCLOAK_REALM_ADMIN_USER_PASSWORD=${{ secrets.KEYCLOAK_REALM_ADMIN_USER_PASSWORD }}" >> .env.properties
+          echo "KEYCLOAK_CLIENT_ID=${{ secrets.KEYCLOAK_CLIENT_ID }}" >> .env.properties
+          echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}" >> .env.properties
+
       - name: Build and test with Maven
         run: mvn clean install
         env:
