@@ -39,8 +39,6 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         this.keycloakSecurityUtil = keycloakSecurityUtil;
     }
 
-    // TODO: update the javadoc; last 4 lines have problem.
-
     /**
      * This method is a lazy loader for the {@link Keycloak} instance. It checks if a Keycloak instance has already been retrieved from {@link KeycloakSecurityUtil}, and if not, it retrieves it.
      * <p>
@@ -52,7 +50,7 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
      * One way to solve this is to refactor your KeycloakAdminUserServiceImpl to lazily load the Keycloak instance.
      * This means that the Keycloak instance won’t be loaded until it’s actually needed.
      *
-     * @return
+     * @return the Keycloak instance
      */
     private Keycloak lazyLoadKeycloakInstance() {
         if (this.keycloak == null) {
@@ -69,6 +67,9 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
 
     //---===============================================================-->
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<UserDTO> getUserDTOList() {
         List<UserRepresentation> userRepresentationList = getUsersResource()
@@ -80,6 +81,9 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         return userDTOList;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserDTO getSingleUserDTO(String id) {
         UserRepresentation foundUserRepresentation = getUsersResource()
@@ -88,6 +92,9 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         return this.userRepresentationToUserDtoConverter.convert(foundUserRepresentation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, String> createUserRepresentation(UserDTO userDTO) {
         UserRepresentation userRepresentation = this.userDTOToUserRepresentationConverter.convert(userDTO);
@@ -107,6 +114,9 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         return responseMap;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, String> updateUserRepresentation(String userId, UserDTO userDto) {
         UserRepresentation userRepresentation = this.userDTOToUserRepresentationConverter.convert(userDto);
@@ -117,6 +127,9 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteUserRepresentation(String id) {
         this.getUsersResource().delete(id);

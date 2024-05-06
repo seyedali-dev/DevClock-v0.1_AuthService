@@ -15,12 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-/**
- * This service class is responsible for persisting user roles in the system.
- * It implements the RolePersistenceService interface.
- *
- * @see RolePersistenceService
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,12 +25,7 @@ public class RolePersistenceServiceImpl implements RolePersistenceService {
     private final KeycloakUserRepository keycloakUserRepository;
 
     /**
-     * Updates the roles of a user if necessary. The roles are extracted from the provided JWT token.
-     * If a role does not exist in the database, it is created.
-     *
-     * @param jwt  The JWT token containing the user's roles
-     * @param user The user whose roles are to be updated
-     * @see #createRoleFromAuthorities(GrantedAuthority, KeycloakUser)
+     * {@inheritDoc}
      */
     @Override
     @Transactional

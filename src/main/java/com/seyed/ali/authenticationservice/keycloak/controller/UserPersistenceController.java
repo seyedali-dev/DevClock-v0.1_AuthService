@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>
  * So using <code>API-Gateway</code>, we intercept each request, and execute the {@link UserPersistenceController#handleUser(Jwt)}
  * method to check whether that user is present or not. If not present, save him in the db.
+ *
+ * @author Seyed-Ali
  */
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +37,14 @@ public class UserPersistenceController {
 
     private final UserPersistenceService userPersistenceService;
 
+    /**
+     * Handles the registration of a new user when they authenticate with Keycloak.
+     * <p>
+     * This endpoint is called when a user authenticates with Keycloak, and it's responsible for persisting the user's information.
+     *
+     * @param jwt the JSON Web Token containing the user's authentication information
+     * @return a ResponseEntity containing the persisted KeycloakUser object
+     */
     @PostMapping("/handle-user")
     public ResponseEntity<KeycloakUser> handleUser(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(this.userPersistenceService.handleUser(jwt));

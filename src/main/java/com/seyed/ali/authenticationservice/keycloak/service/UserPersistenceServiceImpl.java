@@ -23,15 +23,7 @@ public class UserPersistenceServiceImpl implements UserPersistenceService {
     private final KeycloakUserRepository keycloakUserRepository;
 
     /**
-     * Handles the user based on the provided JWT token.
-     * <br><br>
-     * <ol>
-     *     <li>Fetches the user from the database or creates a new one if not found.</li>
-     *     <li>Update the user roles if necessary.</li>
-     * </ol>
-     *
-     * @param jwt The JWT token containing user information
-     * @return The {@link KeycloakUser} object
+     * {@inheritDoc}
      */
     @Override
     @Transactional
