@@ -50,7 +50,7 @@ public class KeycloakSecurityUtil {
      *
      * @return an instance of Keycloak
      */
-    public Keycloak getKeycloakInstance() {
+    public Keycloak createOrGetKeycloakInstance() {
         if (keycloak == null) {
             this.keycloak = KeycloakBuilder.builder()
                     .realm(this.realm)

@@ -1,6 +1,6 @@
 package com.seyed.ali.authenticationservice.config.security;
 
-import com.seyed.ali.authenticationservice.keycloak.converter.KeycloakJwtAuthorityConverter;
+import com.seyed.ali.authenticationservice.keycloak.util.converter.KeycloakJwtAuthorityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
