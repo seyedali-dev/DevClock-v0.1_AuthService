@@ -1,6 +1,5 @@
 package com.seyed.ali.authenticationservice.keycloak.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.seyed.ali.authenticationservice.keycloak.model.dto.UserDTO;
 import com.seyed.ali.authenticationservice.keycloak.util.KeycloakSecurityUtil;
 import com.seyed.ali.authenticationservice.keycloak.util.converter.UserDTOToUserRepresentationConverter;
@@ -26,8 +25,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class KeycloakAdminUserServiceImplTest {
@@ -124,7 +122,7 @@ class KeycloakAdminUserServiceImplTest {
 
     @Test
     @SuppressWarnings("preview")
-    public void testCreateUserRepresentation() throws JsonProcessingException {
+    public void testCreateUserRepresentation() {
         // given
         // mocking `UserDTOToUserRepresentationConverter#convert(UserDTO)`
         UserRepresentation userRepresentation = mock(UserRepresentation.class);
@@ -151,6 +149,37 @@ class KeycloakAdminUserServiceImplTest {
 
         // when
         Map<String, String> actualResponse = this.keycloakAdminUserService.createUserRepresentation(this.userDTO);
+
+        // then
+        assertThat(actualResponse)
+                .as("Must be same")
+                .isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void updateUserRepresentationTest() {
+        // given
+        String someUserId = "some_id";
+        // mocking `UserDTOToUserRepresentationConverter#convert(UserDTO)`
+        UserRepresentation userRepresentation = mock(UserRepresentation.class);
+        when(this.userDTOToUserRepresentationConverter.convert(isA(UserDTO.class)))
+                .thenReturn(userRepresentation);
+
+        // mocking `UsersResource#get(String)`
+        UserResource userResource = mock(UserResource.class);
+        when(this.usersResource.get(isA(String.class)))
+                .thenReturn(userResource);
+
+        // mocking `UserResource#update(UserRepresentation)`
+        doNothing()
+                .when(userResource)
+                .update(isA(UserRepresentation.class));
+
+        Map<String, String> expectedResponse = new HashMap<>();
+        expectedResponse.put("message", "User updated!");
+        expectedResponse.put("userId", someUserId);
+        // when
+        Map<String, String> actualResponse = this.keycloakAdminUserService.updateUserRepresentation(someUserId, this.userDTO);
 
         // then
         assertThat(actualResponse)

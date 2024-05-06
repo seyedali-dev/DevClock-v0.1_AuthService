@@ -107,5 +107,15 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         return responseMap;
     }
 
+    @Override
+    public Map<String, String> updateUserRepresentation(String userId, UserDTO userDto) {
+        UserRepresentation userRepresentation = this.userDTOToUserRepresentationConverter.convert(userDto);
+        this.getUsersResource().get(userId).update(userRepresentation);
+        return Map.of(
+                "message", "User updated!",
+                "userId", userId
+        );
+    }
+
 }
 

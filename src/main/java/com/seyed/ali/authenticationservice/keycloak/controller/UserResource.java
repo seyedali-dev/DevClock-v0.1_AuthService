@@ -47,4 +47,9 @@ public class UserResource {
         return ResponseEntity.ok(this.keycloakAdminUserService.createUserRepresentation(userDTO));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, String>> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(this.keycloakAdminUserService.updateUserRepresentation(id, userDTO));
+    }
+
 }
