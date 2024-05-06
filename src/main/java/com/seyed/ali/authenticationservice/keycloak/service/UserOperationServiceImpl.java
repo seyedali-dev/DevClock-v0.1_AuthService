@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * @see UserOperationService
+ */
 @Service
 @RequiredArgsConstructor
 public class UserOperationServiceImpl implements UserOperationService {

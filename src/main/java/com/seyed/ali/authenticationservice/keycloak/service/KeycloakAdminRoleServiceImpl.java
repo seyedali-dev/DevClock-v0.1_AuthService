@@ -40,20 +40,18 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
         this.roleRepresentationToRoleDTOConverter = roleRepresentationToRoleDTOConverter;
     }
 
-    // TODO: update the javadoc; last 4 lines have problem.
-
     /**
      * This method is a lazy loader for the {@link Keycloak} instance. It checks if a Keycloak instance has already been retrieved from {@link KeycloakSecurityUtil}, and if not, it retrieves it.
      * <p>
      * This method ensures that the Keycloak instance is retrieved only when it’s needed, and it’s retrieved only once per {@link KeycloakAdminUserServiceImpl} instance.
      * <p><br>
-     * The issue is that the Keycloak instance is being initialized in the constructor of KeycloakAdminUserServiceImpl.
+     * The issue is that the Keycloak instance is being initialized in the constructor of {@link KeycloakAdminUserServiceImpl}.
      * This means that when your tests run, the Keycloak instance is already null because the setUp() method (which mocks the Keycloak instance) hasn’t been called yet.
      * <p>
-     * One way to solve this is to refactor your KeycloakAdminUserServiceImpl to lazily load the Keycloak instance.
+     * One way to solve this is to refactor KeycloakAdminUserServiceImpl to lazily load the Keycloak instance.
      * This means that the Keycloak instance won’t be loaded until it’s actually needed.
      *
-     * @return
+     * @return the Keycloak instance
      */
     private Keycloak lazyLoadKeycloakInstance() {
         if (this.keycloak == null) {
@@ -76,6 +74,9 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
 
     //---===============================================================-->
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoleDTO> getRolesList() {
         List<RoleDTO> roles = new ArrayList<>();
@@ -86,12 +87,18 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
         return roles;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoleDTO getSingleRoleRepresentation(String roleName) {
         RoleRepresentation roleRepresentation = this.getRolesResource().get(roleName).toRepresentation();
         return this.roleRepresentationToRoleDTOConverter.convert(roleRepresentation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoleRepresentation createRoleRepresentation(RoleDTO roleDTO) {
         RoleRepresentation roleRepresentation = this.roleDTOToRoleRepresentationConverter.convert(roleDTO);
@@ -99,17 +106,26 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
         return roleRepresentation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateRoleName(RoleDTO roleDTO) {
         RoleRepresentation roleRepresentation = this.roleDTOToRoleRepresentationConverter.convert(roleDTO);
         this.getRolesResource().get(roleDTO.name()).update(roleRepresentation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteRole(String roleName) {
         this.getRolesResource().deleteRole(roleName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoleDTO> getUserRoles(String id) {
         List<RoleDTO> userRoleDTOs = new ArrayList<>();
@@ -123,6 +139,9 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
         return userRoleDTOs;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addRoleToUser(String userId, String roleName) {
         RoleRepresentation roleRepresentation = this.getRolesResource()
@@ -136,6 +155,9 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
                 .add(List.of(roleRepresentation));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addRoleToUser(String id) {
         RoleRepresentation roleRepresentation = this.getRolesResource()
@@ -149,6 +171,9 @@ public class KeycloakAdminRoleServiceImpl implements KeycloakAdminRoleService {
         roleScopeResource.add(List.of(roleRepresentation));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeUsersRole(String id, String roleName) {
         RoleRepresentation roleRepresentation = this.getRolesResource()
