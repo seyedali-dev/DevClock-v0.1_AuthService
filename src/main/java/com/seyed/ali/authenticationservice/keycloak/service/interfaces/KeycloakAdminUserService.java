@@ -15,4 +15,6 @@ public interface KeycloakAdminUserService {
 
     Map<String, String> updateUserRepresentation(String userId, UserDTO userDto);
 
+    void deleteUserRepresentation(String userId);
+
 }

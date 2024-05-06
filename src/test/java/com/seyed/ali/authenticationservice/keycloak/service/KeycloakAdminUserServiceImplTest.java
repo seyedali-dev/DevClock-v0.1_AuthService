@@ -187,4 +187,17 @@ class KeycloakAdminUserServiceImplTest {
                 .isEqualTo(expectedResponse);
     }
 
+    @Test
+    void deleteUserRepresentationTest() {
+        // given
+        String someUserId = "some_ID";
+
+        // when
+        this.keycloakAdminUserService.deleteUserRepresentation(someUserId);
+
+        // then
+        verify(this.usersResource, times(1))
+                .delete(isA(String.class));
+    }
+
 }

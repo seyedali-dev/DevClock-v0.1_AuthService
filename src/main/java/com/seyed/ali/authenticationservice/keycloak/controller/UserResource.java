@@ -52,4 +52,10 @@ public class UserResource {
         return ResponseEntity.ok(this.keycloakAdminUserService.updateUserRepresentation(id, userDTO));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> DeleteUser(@PathVariable String id) {
+        this.keycloakAdminUserService.deleteUserRepresentation(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

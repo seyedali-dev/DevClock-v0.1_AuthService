@@ -117,5 +117,10 @@ public class KeycloakAdminUserServiceImpl implements KeycloakAdminUserService {
         );
     }
 
+    @Override
+    public void deleteUserRepresentation(String id) {
+        this.getUsersResource().delete(id);
+    }
+
 }
 
