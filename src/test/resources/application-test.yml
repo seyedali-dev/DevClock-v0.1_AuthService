@@ -29,7 +29,7 @@ spring:
 keycloak:
   user:
     realm: DevVault-v2.0
-    server-url: http://localhost:8080 # keycloak server's port
+    server-url: http://${KEYCLOAK_SERVER_HOST:localhost}:8080 # keycloak server's port
     client-id: admin-cli # this is mandatory
     grant-type: password
     username: ${KEYCLOAK_REALM_ADMIN_USER_USERNAME} # the newly created user with the given roles
