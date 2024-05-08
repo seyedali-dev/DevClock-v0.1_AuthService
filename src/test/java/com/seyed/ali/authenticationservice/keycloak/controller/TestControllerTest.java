@@ -1,4 +1,4 @@
-package com.seyed.ali.authenticationservice.integration___;
+package com.seyed.ali.authenticationservice.keycloak.controller;
 
 import com.seyed.ali.authenticationservice.config.EurekaClientTestConfiguration;
 import org.hamcrest.CoreMatchers;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc /* calling the api itself */
 @ContextConfiguration(classes = {EurekaClientTestConfiguration.class}) /* to call the configuration in the test (for service-registry configs) */
-public class TestControllerIT {
+public class TestControllerTest {
 
     //<editor-fold desc="fields">
     private @Autowired MockMvc mockMvc;
@@ -43,6 +43,22 @@ public class TestControllerIT {
         resultActions.andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.is("Hello World")));
+    }
+
+    @Test
+    public void helloTest_AccessDenied() throws Exception {
+        ResultActions resultActions = this.mockMvc.perform(
+                MockMvcRequestBuilders.get("/hello")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("another_role")))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andExpect(jsonPath("$.message", CoreMatchers.is("No permission.")))
+                .andExpect(jsonPath("$.server_message", CoreMatchers.is("Access Denied")))
+                .andExpect(jsonPath("$.code", CoreMatchers.is("403 FORBIDDEN")))
+        ;
     }
 
 }
