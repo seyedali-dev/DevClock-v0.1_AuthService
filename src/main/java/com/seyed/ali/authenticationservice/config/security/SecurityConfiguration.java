@@ -1,5 +1,6 @@
 package com.seyed.ali.authenticationservice.config.security;
 
+import com.seyed.ali.authenticationservice.config.security.entrypoints.AuthServiceBearerTokenAccessDeniedHandler;
 import com.seyed.ali.authenticationservice.keycloak.util.converter.KeycloakJwtAuthorityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     private final KeycloakJwtAuthorityConverter keycloakJwtAuthorityConverter;
+    private final AuthServiceBearerTokenAccessDeniedHandler authServiceBearerTokenAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,6 +36,7 @@ public class SecurityConfiguration {
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(this.keycloakJwtAuthorityConverter)
                         )
+                        .accessDeniedHandler(this.authServiceBearerTokenAccessDeniedHandler)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
