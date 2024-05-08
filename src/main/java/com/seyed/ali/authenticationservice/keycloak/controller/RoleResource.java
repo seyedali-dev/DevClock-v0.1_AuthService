@@ -2,18 +2,15 @@ package com.seyed.ali.authenticationservice.keycloak.controller;
 
 import com.seyed.ali.authenticationservice.keycloak.model.dto.RoleDTO;
 import com.seyed.ali.authenticationservice.keycloak.service.interfaces.KeycloakAdminRoleService;
+import com.seyed.ali.authenticationservice.model.response.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * REST controller for managing roles in Keycloak.
@@ -41,9 +38,13 @@ public class RoleResource {
      */
     @PostMapping("/{userId}/{roleName}")
     @Operation(description = "Add role to a user")
-    public ResponseEntity<String> addRoleToUser(@PathVariable String userId, @PathVariable String roleName) {
+    public Result addRoleToUser(@PathVariable String userId, @PathVariable String roleName) {
         this.keycloakAdminRoleService.addRoleToUser(userId, roleName);
-        return new ResponseEntity<>("Role added to user successfully", CREATED);
+        return new Result(
+                true,
+                CREATED,
+                STR."Role: '\{roleName}' added to user: '\{userId}' successfully."
+        );
     }
 
     /**
@@ -55,9 +56,13 @@ public class RoleResource {
      */
     @DeleteMapping("/{userId}/{roleName}")
     @Operation(description = "Remove role of a user")
-    public ResponseEntity<Void> removeUsersRole(@PathVariable String userId, @PathVariable String roleName) {
+    public Result removeUsersRole(@PathVariable String userId, @PathVariable String roleName) {
         this.keycloakAdminRoleService.removeUsersRole(userId, roleName);
-        return ResponseEntity.noContent().build();
+        return new Result(
+                true,
+                NO_CONTENT,
+                STR."Role: '\{roleName}' removed from user: '\{userId}' successfully."
+        );
     }
 
     /**
@@ -66,8 +71,13 @@ public class RoleResource {
      * @return a response containing a list of role DTOs
      */
     @GetMapping("/list")
-    public ResponseEntity<List<RoleDTO>> getRoles() {
-        return ResponseEntity.ok(this.keycloakAdminRoleService.getRolesList());
+    public Result getRoles() {
+        return new Result(
+                true,
+                OK,
+                "List of Roles present in db (keycloak & app).",
+                this.keycloakAdminRoleService.getRolesList()
+        );
     }
 
     /**
@@ -77,8 +87,13 @@ public class RoleResource {
      * @return a response containing the role DTO
      */
     @GetMapping("/{roleName}")
-    public ResponseEntity<RoleDTO> getRoleName(@PathVariable String roleName) {
-        return ResponseEntity.ok(this.keycloakAdminRoleService.getSingleRoleRepresentation(roleName));
+    public Result getRoleName(@PathVariable String roleName) {
+        return new Result(
+                true,
+                OK,
+                "Found Role.",
+                this.keycloakAdminRoleService.getSingleRoleRepresentation(roleName)
+        );
     }
 
     /**
@@ -88,8 +103,13 @@ public class RoleResource {
      * @return a response containing the created role representation
      */
     @PostMapping
-    public ResponseEntity<RoleRepresentation> createRole(@RequestBody RoleDTO roleDTO) {
-        return new ResponseEntity<>(this.keycloakAdminRoleService.createRoleRepresentation(roleDTO), CREATED);
+    public Result createRole(@RequestBody RoleDTO roleDTO) {
+        return new Result(
+                true,
+                CREATED,
+                "Role created and saved successfully.",
+                this.keycloakAdminRoleService.createRoleRepresentation(roleDTO)
+        );
     }
 
     /**
@@ -99,9 +119,13 @@ public class RoleResource {
      * @return a response indicating that the role was updated successfully
      */
     @PutMapping
-    public ResponseEntity<String> updateName(@RequestBody RoleDTO roleDTO) {
+    public Result updateName(@RequestBody RoleDTO roleDTO) {
         this.keycloakAdminRoleService.updateRoleName(roleDTO);
-        return new ResponseEntity<>("role updated.", CREATED);
+        return new Result(
+                true,
+                OK,
+                "Role updated successfully."
+        );
     }
 
     /**
@@ -111,9 +135,13 @@ public class RoleResource {
      * @return a response indicating that the role was deleted successfully
      */
     @DeleteMapping("/{roleName}")
-    public ResponseEntity<Void> deleteRole(@PathVariable String roleName) {
+    public Result deleteRole(@PathVariable String roleName) {
         this.keycloakAdminRoleService.deleteRole(roleName);
-        return ResponseEntity.noContent().build();
+        return new Result(
+                true,
+                NO_CONTENT,
+                "Role deleted from db (keycloak & app)."
+        );
     }
 
 }
