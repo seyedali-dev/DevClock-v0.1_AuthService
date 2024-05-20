@@ -3,6 +3,7 @@ package com.seyed.ali.authenticationservice.keycloak.model.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
-public class KeycloakUser {
+public class KeycloakUser implements Serializable {
 
     @Id
     @Column(unique = true, nullable = false, updatable = false, name = "subject")

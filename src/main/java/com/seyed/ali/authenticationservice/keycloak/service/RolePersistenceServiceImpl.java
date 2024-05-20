@@ -8,6 +8,7 @@ import com.seyed.ali.authenticationservice.keycloak.service.interfaces.RolePersi
 import com.seyed.ali.authenticationservice.keycloak.util.KeycloakSecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,10 @@ public class RolePersistenceServiceImpl implements RolePersistenceService {
      */
     @Override
     @Transactional
+    @Cacheable(
+            key = "#user.id",
+            cacheNames = "role-cache"
+    )
     public void updateRolesIfNecessary(Jwt jwt, KeycloakUser user) {
         // Extract authorities from jwt token
         Collection<GrantedAuthority> grantedAuthorities = this.keycloakSecurityUtil.extractAuthorities(jwt);
@@ -42,12 +47,14 @@ public class RolePersistenceServiceImpl implements RolePersistenceService {
 
             // If the authority is not found in the database, create a new one
             if (foundAuthority.isEmpty()) {
-                log.info("Role not found in database. Creating new role in DB: {}", authority.replace("ROLE_", ""));
+                log.info("Role not found in cache or database. Creating new role in DB: {}", authority.replace("ROLE_", ""));
                 KeycloakRoles roleFromAuthorities = this.createRoleFromAuthorities(grantedAuthority, user);
                 this.keycloakRolesRepository.save(roleFromAuthorities);
                 rolesSet.add(roleFromAuthorities);
             }
         });
+
+        log.info("Role fetched from _DataBase_ and is cached. No further logs will be generated for this operation.");
         user.setKeycloakRoles(rolesSet);
         this.keycloakUserRepository.save(user);
     }
