@@ -61,6 +61,20 @@ keycloak:
     password: ${KEYCLOAK_REALM_ADMIN_USER_PASSWORD}
     default-role: user
 
+--- # Redis
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: redis
+    cache-names:
+      - user-cache
+      - role-cache
+    redis:
+      cache-null-values: true
+      time-to-live: ${REDIS_CACHE_TIME_TO_LIVE:600000} # 1 hour
 
 --- # Swagger
 springdoc:
