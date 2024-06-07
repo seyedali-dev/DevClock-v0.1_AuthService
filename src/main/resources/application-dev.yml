@@ -82,6 +82,3 @@ springdoc:
     oauth:
       client-id: ${KEYCLOAK_CLIENT_ID}
       client-secret: ${KEYCLOAK_CLIENT_SECRET}
-  api-docs:
-    enabled: true
-    path: /authentication-service/v3/api-docs
