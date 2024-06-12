@@ -6,6 +6,7 @@ import com.seyed.ali.authenticationservice.model.response.Result;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -35,6 +36,7 @@ import static org.springframework.http.HttpStatus.*;
                 This role represents administrative users who are trusted to manage user accounts and roles.
                 """
 )
+@PreAuthorize("hasRole('realm_admin')")
 public class UserResource {
 
     private final KeycloakAdminUserService keycloakAdminUserService;
