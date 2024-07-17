@@ -1,8 +1,16 @@
-FROM openjdk:22-slim-bullseye
+FROM eclipse-temurin:22_36-jre as builder
 LABEL authors="Seyed-Ali"
+WORKDIR application
+ARG JAR_FILE=target/authentication-service.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
-ADD target/Authentication-Service.jar app.jar
-
-ENTRYPOINT ["java", "--enable-preview", "-jar", "app.jar"]
+FROM eclipse-temurin:22_36-jre
+WORKDIR application
+COPY --from=builder application/dependencies ./
+COPY --from=builder application/spring-boot-loader ./
+COPY --from=builder application/snapshot-dependencies ./
+COPY --from=builder application/application ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 EXPOSE 8081
