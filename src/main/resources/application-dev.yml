@@ -1,15 +1,9 @@
 #file: noinspection HttpUrlsUsage
 
-server:
-  port: 8081
-
 spring:
-  application:
-    name: Authentication-Service
   #enable .env.properties file
   config:
     import: optional:classpath:.env.properties
-
 
 --- # DB
 spring:
