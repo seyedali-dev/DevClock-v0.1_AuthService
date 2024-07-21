@@ -43,7 +43,7 @@ public class RoleResource {
         return new Result(
                 true,
                 CREATED,
-                STR."Role: '\{roleName}' added to user: '\{userId}' successfully."
+                "Role: '" + roleName + "' added to user: '" + userId + "' successfully."
         );
     }
 
@@ -61,7 +61,7 @@ public class RoleResource {
         return new Result(
                 true,
                 NO_CONTENT,
-                STR."Role: '\{roleName}' removed from user: '\{userId}' successfully."
+                "Role: '" + roleName + "' removed from user: '" + userId + "' successfully."
         );
     }
 

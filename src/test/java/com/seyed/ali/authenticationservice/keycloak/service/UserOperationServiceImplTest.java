@@ -46,7 +46,7 @@ class UserOperationServiceImplTest {
                 .as("Must have some value")
                 .isPresent();
         assertThat(user.get().getId())
-                .as(STR."Must be same as: \{keycloakUser.getId()}")
+                .as("Must be same as: " + keycloakUser.getId())
                 .isEqualTo(keycloakUser.getId());
     }
 

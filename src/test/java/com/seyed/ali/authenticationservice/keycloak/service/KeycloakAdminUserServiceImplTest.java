@@ -66,7 +66,6 @@ class KeycloakAdminUserServiceImplTest {
     //</editor-fold>
 
     @Test
-    @SuppressWarnings("preview")
     public void getUserDTOListTest() {
         // Arrange
         UserRepresentation userRepresentation = new UserRepresentation();
@@ -94,7 +93,7 @@ class KeycloakAdminUserServiceImplTest {
                 .as("Must have 1 users data")
                 .hasSize(1);
         assertThat(userDTOList.getFirst())
-                .as(STR."Should be: {\{userDTO}}")
+                .as("Should be: " + userDTO)
                 .isEqualTo(userDTO);
     }
 
@@ -121,7 +120,6 @@ class KeycloakAdminUserServiceImplTest {
     }
 
     @Test
-    @SuppressWarnings("preview")
     public void testCreateUserRepresentation() {
         // given
         // mocking `UserDTOToUserRepresentationConverter#convert(UserDTO)`
@@ -141,7 +139,7 @@ class KeycloakAdminUserServiceImplTest {
 
         // mocking `Response#getLocation()`
         when(response.getLocation())
-                .thenReturn(URI.create(STR."/some_path/\{userId}"));
+                .thenReturn(URI.create("/some_path/" + userId));
 
         Map<String, String> expectedResponse = new HashMap<>();
         expectedResponse.put("message", "User created!");
